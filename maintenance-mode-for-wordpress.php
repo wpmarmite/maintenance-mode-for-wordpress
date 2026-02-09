@@ -131,6 +131,7 @@ class Maintenance_Mode_WP {
         add_action( 'rest_api_init', [ $this, 'disable_rest_api_for_guests' ] );
         add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_styles' ] );
         add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_frontend_styles' ] );
+        add_filter( 'option_page_capability_maintenance_mode_wp_settings', [ $this, 'settings_capability' ] );
     }
 
     /**
@@ -217,18 +218,18 @@ class Maintenance_Mode_WP {
                 'filter_items_list'     => esc_html__( 'Filter Maintenance Pages List', 'maintenance-mode-wp' ),
             ],
             'public'              => false,
-            'show_ui'             => current_user_can( 'administrator' ),
+            'show_ui'             => true,
             'show_in_menu'        => true,
             'menu_icon'           => 'dashicons-welcome-view-site',
             'capability_type'     => 'post',
             'capabilities'        => [
-                'edit_post'          => 'manage_options',
-                'read_post'          => 'manage_options',
-                'delete_post'        => 'manage_options',
-                'edit_posts'         => 'manage_options',
-                'edit_others_posts'  => 'manage_options',
-                'publish_posts'      => 'manage_options',
-                'read_private_posts' => 'manage_options',
+                'edit_post'          => 'edit_others_posts',
+                'read_post'          => 'edit_others_posts',
+                'delete_post'        => 'edit_others_posts',
+                'edit_posts'         => 'edit_others_posts',
+                'edit_others_posts'  => 'edit_others_posts',
+                'publish_posts'      => 'edit_others_posts',
+                'read_private_posts' => 'edit_others_posts',
             ],
             'exclude_from_search' => true,
             'publicly_queryable'  => false,
@@ -250,7 +251,7 @@ class Maintenance_Mode_WP {
             'edit.php?post_type=maintenance_page',
             esc_html__( 'Settings', 'maintenance-mode-wp' ),
             esc_html__( 'Settings', 'maintenance-mode-wp' ),
-            'manage_options',
+            'edit_others_posts',
             'maintenance_mode_wp_settings',
             [ $this, 'render_settings_page' ]
         );
@@ -523,6 +524,16 @@ class Maintenance_Mode_WP {
      */
     public function sanitize_checkbox( $input ) {
         return ! empty( $input ) ? 1 : 0;
+    }
+
+    /**
+     * Allow editors to save settings.
+     * 
+     * @param string $capability The current capability.
+     * @return string The new capability.
+     */
+    public function settings_capability( $capability ) {
+        return 'edit_others_posts';
     }
 }
 
