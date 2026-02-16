@@ -61,7 +61,7 @@ if ( ! class_exists( 'RobertDevore\WPComCheck\WPComPluginHandler' ) ) {
 use RobertDevore\WPComCheck\WPComPluginHandler;
 
 // Initialize the WPComPluginHandler with the plugin slug and learn more link.
-new WPComPluginHandler( plugin_basename( __FILE__ ), 'https://robertdevore.com/why-this-plugin-doesnt-support-wordpress-com-hosting/' );
+// new WPComPluginHandler( plugin_basename( __FILE__ ), 'https://robertdevore.com/why-this-plugin-doesnt-support-wordpress-com-hosting/' );
 
 /**
  * Adds a "Maintenance Mode is Active" notice in the admin toolbar.
